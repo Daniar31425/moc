@@ -76,6 +76,14 @@ def test_rejects_blank_topic() -> None:
     assert response.json()["error"]["code"] == "VALIDATION_ERROR"
 
 
+def test_structured_output_schema_requires_exactly_three_options() -> None:
+    schema = LessonContent.model_json_schema()
+    options_schema = schema["$defs"]["Quiz"]["properties"]["options"]
+
+    assert options_schema["minItems"] == 3
+    assert options_schema["maxItems"] == 3
+
+
 def test_openai_mode_requires_api_key(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("USE_MOCK", "false")
     get_settings.cache_clear()
