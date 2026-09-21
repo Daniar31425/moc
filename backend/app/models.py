@@ -20,7 +20,7 @@ class LessonRequest(BaseModel):
 
 class Quiz(BaseModel):
     question: str
-    options: list[str]
+    options: list[str] = Field(min_length=3, max_length=3)
     correct_option_index: int
     explanation: str
 
