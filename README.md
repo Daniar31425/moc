@@ -76,6 +76,7 @@ README.md
 |---|---|---|
 | `OPENAI_API_KEY` | backend | секретный ключ OpenAI; только окружение |
 | `OPENAI_MODEL` | backend | модель генерации; по умолчанию `gpt-5-mini` |
+| `OPENAI_TIMEOUT_SECONDS` | backend | серверный таймаут OpenAI; по умолчанию 25 секунд |
 | `USE_MOCK` | backend | `true` для резервного mock-режима |
 | `BACKEND_HOST`, `BACKEND_PORT` | backend | адрес сервера |
 | `FRONTEND_ORIGIN` | backend | разрешённый CORS origin |
@@ -93,6 +94,8 @@ python -m venv .venv
 pip install -r requirements-dev.txt
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
+
+По умолчанию включён безопасный демонстрационный режим `USE_MOCK=true`. Для реальной генерации задайте `OPENAI_API_KEY` только в `backend/.env` или окружении и переключите `USE_MOCK=false`. Backend использует Responses API и Pydantic Structured Outputs; сырой ответ OpenAI и секреты в браузер не передаются.
 
 Проверка:
 
@@ -122,7 +125,7 @@ pnpm run dev -- --host 127.0.0.1
 
 ## Текущий статус
 
-Архитектурная фаза: frontend и backend запускаются, главный сценарий работает с mock-ответом. Реальная интеграция OpenAI — следующая задача Данияра, без изменения контракта.
+Backend-фаза: главный сценарий работает в mock-режиме, а реальная интеграция OpenAI Responses API реализована без изменения API-контракта. Добавлены структурированный результат, валидация, таймаут 25 секунд и согласованные ответы `502`, `504`, `500`. Для live-проверки OpenAI требуется локальный `OPENAI_API_KEY`.
 
 Известные ограничения: нет хранения данных; один урок и один вопрос; `kk` зафиксирован контрактом, но качество mock-текста не локализовано; внешний API зависит от сети и лимитов.
 
